@@ -1,6 +1,6 @@
 // @ts-nocheck
 'use client';
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic'; // Removed to avoid conflict with 'use client' in Next.js 15
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
@@ -1017,7 +1017,7 @@ export default function ProjectDetail() {
   const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null);
 
   // Force scroll to top on slug change or initial load
-  useLayoutEffect(() => {
+  useEffect(() => {
     const resetScroll = () => {
       window.scrollTo(0, 0);
       document.documentElement.scrollTo(0, 0);
