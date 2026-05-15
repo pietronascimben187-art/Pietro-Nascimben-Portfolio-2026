@@ -1,26 +1,18 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  /* Reserve scrollbar gutter space permanently — prevents layout shift
+     when the scrollbar appears/disappears during page transitions */
+  scrollbar-gutter: stable;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: white;
+  color: black;
+  cursor: none; /* Hide default cursor for custom lens */
+  /* Fallback for browsers without scrollbar-gutter support */
+  overflow-y: scroll;
+}
+a, button {
+  cursor: none !important;
 }
