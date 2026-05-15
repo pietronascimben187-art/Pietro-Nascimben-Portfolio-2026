@@ -1,5 +1,6 @@
 // @ts-nocheck
 'use client';
+export const dynamic = 'force-dynamic';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
