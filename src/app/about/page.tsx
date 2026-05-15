@@ -87,6 +87,15 @@ const TOOLS = [
   { name: 'Framer',                level: 70 },
 ];
 
+// ─── Languages ───────────────────────────────────────────────────────────────
+const LANGUAGES = [
+  { name: 'Italian',  level: 'C2' },
+  { name: 'English',  level: 'B2', numericLevel: 3.5 }, // Metà tra B2 e C1
+  { name: 'Spanish',  level: 'A2' },
+];
+
+const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+
 // ─── Experience ──────────────────────────────────────────────────────────────
 const EXPERIENCE = [
   {
@@ -127,6 +136,7 @@ const EDUCATION = [
     period: 'Sep 2024 — Jul 2026 (expected)',
     current: true,
     desc: "Master's Degree in Product Design — Techno Bodies for Equal Futures",
+    language: "English",
   },
   {
     role: 'ISIA Roma Design',
@@ -134,6 +144,7 @@ const EDUCATION = [
     period: 'Oct 2021 — Oct 2024',
     current: false,
     desc: 'Academic Degree in Industrial Design — 1° Level',
+    language: "Italian",
   },
   {
     role: 'ITG Andrea Palladio',
@@ -190,12 +201,13 @@ function SkillBar({ tool, index }: { tool: typeof TOOLS[0]; index: number }) {
 
 // ─── Timeline entry ───────────────────────────────────────────────────────────
 function TimelineEntry({
-  period, role, company, desc, current, index,
+  period, role, company, desc, language, current, index,
 }: {
   period: string;
   role: string;
   company: string;
   desc?: string;
+  language?: string;
   current?: boolean;
   index: number;
 }) {
@@ -249,7 +261,74 @@ function TimelineEntry({
           {desc}
         </p>
       )}
+
+      {/* Language */}
+      {language && (
+        <p
+          className="font-mono text-[9px] tracking-[0.18em] uppercase text-black/35 mt-1"
+        >
+          Language: <span className="font-bold text-black/60">{language}</span>
+        </p>
+      )}
     </motion.div>
+  );
+}
+
+function LanguageBar({ lang, index }: { lang: typeof LANGUAGES[0]; index: number }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-6%' });
+  const activeIndex = (lang as any).numericLevel !== undefined 
+    ? (lang as any).numericLevel 
+    : CEFR_LEVELS.indexOf(lang.level);
+
+  return (
+    <div
+      ref={ref}
+      className="flex items-center gap-5 md:gap-8 py-5 border-b border-black/8"
+    >
+      {/* Lang name */}
+      <span
+        className="font-mono uppercase text-black/70 shrink-0 w-24 md:w-44"
+        style={{ fontSize: '11px', letterSpacing: '0.12em' }}
+      >
+        {lang.name}
+      </span>
+
+      {/* Nodes */}
+      <div className="flex-1 flex justify-between relative px-1">
+        {/* Connection Line (Track) */}
+        <div className="absolute top-1/2 left-0 w-full h-px bg-black/10 -translate-y-1/2" />
+        
+        {/* Active Fill Line */}
+        <motion.div 
+          className="absolute top-1/2 left-0 h-px bg-black -translate-y-1/2"
+          style={{ originX: 0, width: '100%' }}
+          initial={{ scaleX: 0 }}
+          animate={inView ? { scaleX: activeIndex / (CEFR_LEVELS.length - 1) } : { scaleX: 0 }}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}
+        />
+        
+        {CEFR_LEVELS.map((lvl, i) => {
+          const isActive = i <= activeIndex;
+          return (
+            <div key={lvl} className="relative flex flex-col items-center">
+              <motion.div 
+                className={`w-1.5 h-1.5 rounded-full z-10 ${isActive ? 'bg-black' : 'bg-white border border-black/15'}`}
+                initial={{ scale: 0 }}
+                animate={inView ? { scale: 1 } : { scale: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.1 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+              />
+              <span 
+                className={`absolute top-4 font-mono select-none ${isActive ? 'text-black/50 font-bold' : 'text-black/15'}`}
+                style={{ fontSize: '7px', letterSpacing: '0.05em' }}
+              >
+                {lvl}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -516,27 +595,48 @@ export default function About() {
           </div>
         </FadeUp>
 
-        <FadeUp delay={0.08} className="mt-8 max-w-2xl">
-          {/* Column labels */}
-          <div className="flex items-center gap-5 md:gap-8 pb-3 mb-1">
-            <span
-              className="font-mono uppercase text-black/20 shrink-0 w-44"
-              style={{ fontSize: '8px', letterSpacing: '0.3em' }}
-            >
-              Software
-            </span>
-            <span
-              className="flex-1 font-mono uppercase text-black/20 text-right"
-              style={{ fontSize: '8px', letterSpacing: '0.3em' }}
-            >
-              Proficiency
-            </span>
+        <FadeUp delay={0.08} className="mt-8 flex flex-col md:flex-row gap-16 md:gap-32">
+          {/* LEFT: Tools & Software */}
+          <div className="flex-1">
+            <div className="flex items-center gap-5 md:gap-8 pb-3 mb-1 border-b border-black/10">
+              <span
+                className="font-mono uppercase text-black/20 shrink-0 w-32 md:w-44"
+                style={{ fontSize: '8px', letterSpacing: '0.3em' }}
+              >
+                Software
+              </span>
+              <span
+                className="flex-1 font-mono uppercase text-black/20 text-right"
+                style={{ fontSize: '8px', letterSpacing: '0.3em' }}
+              >
+                Proficiency
+              </span>
+            </div>
+            {TOOLS.map((tool, i) => (
+              <SkillBar key={tool.name} tool={tool} index={i} />
+            ))}
           </div>
 
-          {/* Skill bars */}
-          {TOOLS.map((tool, i) => (
-            <SkillBar key={tool.name} tool={tool} index={i} />
-          ))}
+          {/* RIGHT: Languages */}
+          <div className="flex-1">
+            <div className="flex items-center gap-5 md:gap-8 pb-3 mb-1 border-b border-black/10">
+              <span
+                className="font-mono uppercase text-black/20 shrink-0 w-32 md:w-44"
+                style={{ fontSize: '8px', letterSpacing: '0.3em' }}
+              >
+                Languages
+              </span>
+              <span
+                className="flex-1 font-mono uppercase text-black/20 text-right"
+                style={{ fontSize: '8px', letterSpacing: '0.3em' }}
+              >
+                Proficiency
+              </span>
+            </div>
+            {LANGUAGES.map((lang, i) => (
+              <LanguageBar key={lang.name} lang={lang} index={i} />
+            ))}
+          </div>
         </FadeUp>
       </section>
 
