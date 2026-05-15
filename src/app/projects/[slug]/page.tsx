@@ -1160,7 +1160,7 @@ export default function ProjectDetail() {
           </section>
         )}
 
-        {(proj as any).secondaryDescription && (
+        {(proj as any).secondaryDescription && (proj as any).introImage && (
           <section className="relative w-full px-6 md:px-12 bg-white flex flex-col pointer-events-auto z-10 pt-16 pb-24">
             <div className="flex flex-col md:flex-row items-start gap-16 md:gap-32">
               {/* Left Column (1/2): First Paragraph */}
