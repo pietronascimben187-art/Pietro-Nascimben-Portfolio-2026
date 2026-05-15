@@ -325,38 +325,39 @@ export default function About() {
         </FadeUp>
 
         {/* Large name */}
-        <FadeUp delay={0.12} className="mt-4 md:mt-6 relative w-fit">
-          <h1
-            className="font-bold tracking-tighter uppercase leading-[0.88] text-black"
-            style={{ fontSize: 'clamp(3.5rem, 11vw, 11rem)' }}
-          >
-            Pietro<br />Nascimben
-          </h1>
+        <FadeUp delay={0.12} className="mt-4 md:mt-6 relative">
+          <div className="relative w-fit">
+            <h1
+              className="font-bold tracking-tighter uppercase leading-[0.88] text-black"
+              style={{ fontSize: 'clamp(3.5rem, 11vw, 11rem)' }}
+            >
+              Pietro<br />Nascimben
+            </h1>
 
-          {/* Portrait photo — mirrored, sits on last letter 'N' of NASCIMBEN */}
-          <motion.div
-            className="absolute pointer-events-none"
-            style={{ 
-              left: '78%', 
-              bottom: '-125px', 
-              zIndex: 10,
-              transformOrigin: 'bottom center'
-            }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-          >
-            <img
-              src="/images/posa.png"
-              alt="Pietro Nascimben"
-              style={{
-                height: '70vh',
-                width: 'auto',
-                display: 'block',
-                transform: 'scaleX(-1)',
+            {/* Portrait photo — mirrored, sits on last letter 'N' of NASCIMBEN */}
+            <motion.div
+              className="absolute pointer-events-none"
+              style={{ 
+                left: '78%', 
+                bottom: '-125px', 
+                zIndex: 10 
               }}
-            />
-          </motion.div>
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+            >
+              <img
+                src="/images/posa.png"
+                alt="Pietro Nascimben"
+                style={{
+                  height: '70vh',
+                  width: 'auto',
+                  display: 'block',
+                  transform: 'scaleX(-1)',
+                }}
+              />
+            </motion.div>
+          </div>
         </FadeUp>
 
         <Rule className="mt-10 md:mt-14" />
