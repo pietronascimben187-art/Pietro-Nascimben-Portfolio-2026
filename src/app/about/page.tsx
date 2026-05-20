@@ -396,7 +396,7 @@ export default function About() {
       {/* ══════════════════════════════════════════════════════════
           HERO — above the fold
       ══════════════════════════════════════════════════════════ */}
-      <section className="relative w-full min-h-[80vh] flex flex-col justify-end px-6 md:px-12 pt-32 pb-12 md:pb-16">
+      <section className="relative w-full flex flex-col justify-end px-6 md:px-12 pt-32 pb-12 md:pb-16 min-h-[80vh] md:min-h-[50vw]">
 
         {/* Role label */}
         <FadeUp delay={0.05}>
@@ -423,8 +423,8 @@ export default function About() {
             <img
               src="/images/posa.png"
               alt="Pietro Nascimben"
+              className="h-[59.5vh] md:h-[37.4vw]"
               style={{
-                height: '70vh',
                 width: 'auto',
                 display: 'block',
                 transform: 'scaleX(-1)',
