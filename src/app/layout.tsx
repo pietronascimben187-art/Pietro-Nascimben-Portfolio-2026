@@ -15,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased bg-white">
-      <body className="flex flex-col min-h-full bg-white text-black selection:bg-black selection:text-white">
+    <html lang="en" className="antialiased bg-white">
+      <body className="flex flex-col bg-white text-black selection:bg-black selection:text-white">
         <SmoothScroll>
           <CustomCursor />
           <Navbar />
