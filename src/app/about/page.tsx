@@ -406,7 +406,7 @@ export default function About() {
         {/* Large name */}
         <FadeUp delay={0.12} className="mt-4 md:mt-6 relative">
           <h1
-            className="relative z-20 font-bold tracking-tighter uppercase leading-[0.88] text-black"
+            className="relative z-20 md:z-auto font-bold tracking-tighter uppercase leading-[0.88] text-black"
             style={{ fontSize: 'clamp(3.5rem, 11vw, 11rem)' }}
           >
             Pietro<br />Nascimben
