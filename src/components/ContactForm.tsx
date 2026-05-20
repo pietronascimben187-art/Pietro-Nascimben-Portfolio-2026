@@ -164,11 +164,11 @@ export function ContactForm() {
       <div className="flex items-center gap-6">
         <motion.button
           type="submit"
+          data-cursor="no-arrow"
           disabled={status === 'loading' || overLimit}
-          whileHover={{ opacity: 0.7 }}
           whileTap={{ scale: 0.97 }}
-          transition={{ duration: 0.18 }}
-          className="font-mono text-xs tracking-[0.3em] uppercase text-black border border-black/30 px-8 py-3.5 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+          transition={{ duration: 0.2 }}
+          className="font-mono text-xs tracking-[0.3em] uppercase bg-transparent text-black border border-black/30 hover:border-black hover:bg-black hover:text-white px-8 py-3.5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           style={{ cursor: 'none' }}
         >
           {status === 'loading' ? 'Sending…' : 'Send Request'}

@@ -13,14 +13,18 @@ export function CustomCursor() {
 
       const target = e.target as HTMLElement;
       const onNav = target.closest('[data-cursor="nav"]') !== null;
+      const disableArrow = target.closest('[data-cursor="no-arrow"]') !== null;
 
       if (onNav) {
         setIsNavHovered(true);
         setIsHovered(false);
       } else if (
-        target.tagName.toLowerCase() === 'a' ||
-        target.closest('a') ||
-        target.tagName.toLowerCase() === 'button'
+        !disableArrow && (
+          target.tagName.toLowerCase() === 'a' ||
+          target.closest('a') ||
+          target.tagName.toLowerCase() === 'button' ||
+          target.closest('button')
+        )
       ) {
         setIsHovered(true);
         setIsNavHovered(false);
