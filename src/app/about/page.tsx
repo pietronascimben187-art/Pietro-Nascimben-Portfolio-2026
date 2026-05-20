@@ -406,7 +406,7 @@ export default function About() {
         {/* Large name */}
         <FadeUp delay={0.12} className="mt-4 md:mt-6 relative">
           <h1
-            className="font-bold tracking-tighter uppercase leading-[0.88] text-black"
+            className="relative z-20 font-bold tracking-tighter uppercase leading-[0.88] text-black"
             style={{ fontSize: 'clamp(3.5rem, 11vw, 11rem)' }}
           >
             Pietro<br />Nascimben
@@ -415,7 +415,7 @@ export default function About() {
           {/* Portrait photo — mirrored, sits on last letter 'N' of NASCIMBEN */}
           <motion.div
             className="absolute pointer-events-none"
-            style={{ left: 'calc(45% - 20px)', bottom: '-125px', zIndex: 10 }}
+            style={{ left: 'calc(45% - 20px)', bottom: 'clamp(-8rem, -8.6vw, -2rem)', zIndex: 10 }}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
@@ -423,8 +423,9 @@ export default function About() {
             <img
               src="/images/posa.png"
               alt="Pietro Nascimben"
-              className="h-[59.5vh] md:h-[37.4vw]"
+              className="max-w-none"
               style={{
+                height: 'clamp(14rem, 37.4vw, 55rem)',
                 width: 'auto',
                 display: 'block',
                 transform: 'scaleX(-1)',

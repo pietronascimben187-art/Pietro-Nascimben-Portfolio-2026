@@ -45,13 +45,15 @@ export function CustomCursor() {
   return (
     <>
       <style>{`
-         body { cursor: none; }
-         a, button { cursor: none; }
+         @media (hover: hover) and (pointer: fine) {
+           body { cursor: none; }
+           a, button { cursor: none !important; }
+         }
       `}</style>
 
-      {/* Circle cursor — hidden on nav hover */}
+      {/* Circle cursor — hidden on nav hover & hidden entirely on mobile */}
       <motion.div
-        className="fixed top-0 left-0 w-20 h-20 rounded-full border-[4px] border-white pointer-events-none z-[9999] mix-blend-difference flex items-center justify-center"
+        className="hidden md:flex fixed top-0 left-0 w-20 h-20 rounded-full border-[4px] border-white pointer-events-none z-[9999] mix-blend-difference items-center justify-center"
         animate={{
           scale: isNavHovered ? 0 : (isHovered ? 1 : 0.4),
           opacity: isNavHovered ? 0 : 1,

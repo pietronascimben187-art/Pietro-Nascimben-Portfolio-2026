@@ -99,29 +99,10 @@ function ParallaxSlide({ proj }: { proj: typeof PROJECTS[0] }) {
   return (
     <section 
       ref={ref}
-      className={`sticky top-0 h-[100svh] w-full flex flex-col justify-center overflow-hidden ${proj.bg === 'black' ? 'bg-black text-white' : 'bg-white text-black'}`}
+      className={`sticky top-0 h-[100svh] w-full flex flex-col md:justify-center overflow-hidden ${proj.bg === 'black' ? 'bg-black text-white' : 'bg-white text-black'}`}
     >
-      <div className={`absolute inset-0 w-full h-full flex ${proj.isReduced ? (proj.id === 1 ? 'items-end justify-end' : proj.id === 5 ? 'items-start justify-end' : 'items-center justify-end') : ''} overflow-hidden pointer-events-none`}>
-         <div className={`relative ${proj.isReduced ? 'w-[80vw] h-[80vh] z-20' : 'w-full h-full overflow-hidden'} pointer-events-none`}>
-            <motion.div 
-              className={`absolute inset-0 w-full ${proj.isReduced ? 'h-[110%] top-0' : 'h-[120%] top-[-10%]'} pointer-events-none`}
-              style={{ 
-                y: proj.isReduced ? yReduced : yNormal, 
-                scale: (proj as any).scale ? (proj as any).scale : (proj.isReduced ? 1.05 : scaleNormal)
-              }}
-            >
-               <Image 
-                 src={proj.src} 
-                 alt={proj.title}
-                 fill
-                 unoptimized
-                 className={`${proj.isReduced ? (proj.id === 3 ? 'object-contain object-top' : 'object-cover object-bottom object-right') : 'object-cover'} brightness-[1.0] pointer-events-none`}
-               />
-            </motion.div>
-         </div>
-      </div>
-
-      <div className="relative z-30 w-full px-6 md:px-16 flex flex-col uppercase pointer-events-none">
+      {/* ── Title Container (Top on mobile, Centered on desktop) ── */}
+      <div className="relative z-30 w-full px-6 md:px-16 pt-32 md:pt-0 flex flex-col uppercase pointer-events-none">
          <div className={`flex items-center gap-4 ${proj.color === 'white' ? 'text-white' : 'text-black'} font-sans mb-2 pointer-events-none`}>
             <span className="font-mono text-sm tracking-widest font-bold uppercase">PROJECT {proj.id}</span>
             <span className="opacity-30">/</span>
@@ -136,11 +117,33 @@ function ParallaxSlide({ proj }: { proj: typeof PROJECTS[0] }) {
            <span className={`absolute top-2 bottom-2 left-4 w-[1px] ${proj.color === 'white' ? 'bg-white/40' : 'bg-black/40'} origin-center scale-y-0 group-hover:scale-y-100 transition-transform duration-[600ms] ease-[cubic-bezier(0.19,1,0.22,1)]`} />
            <span className={`absolute top-2 bottom-2 right-4 w-[1px] ${proj.color === 'white' ? 'bg-white/40' : 'bg-black/40'} origin-center scale-y-0 group-hover:scale-y-100 transition-transform duration-[600ms] ease-[cubic-bezier(0.19,1,0.22,1)]`} />
            
+           {/* Title Text (Massively enlarged on mobile) */}
            <SlideTitle 
              text={proj.title} 
-             className={`text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-none ${proj.color === 'white' ? 'text-white' : 'text-black'} mix-blend-normal opacity-100 transition-all duration-500`}
+             className={`text-6xl sm:text-7xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-none ${proj.color === 'white' ? 'text-white' : 'text-black'} mix-blend-normal opacity-100 transition-all duration-500`}
            />
          </Link>
+      </div>
+
+      {/* ── Image Container (Bottom flex-1 on mobile, absolute inset-0 on desktop) ── */}
+      <div className={`relative flex-1 mt-8 mb-12 md:m-0 md:absolute md:inset-0 w-full md:h-full flex ${proj.isReduced ? (proj.id === 1 ? 'items-end justify-center md:justify-end' : proj.id === 5 ? 'items-center md:items-start justify-center md:justify-end' : 'items-center justify-center md:justify-end') : 'items-center justify-center md:items-center md:justify-center'} overflow-hidden pointer-events-none`}>
+         <div className={`relative ${proj.isReduced ? 'w-[90vw] md:w-[80vw] h-[100%] md:h-[80vh] z-20' : 'w-[90vw] md:w-full h-full md:overflow-hidden'} pointer-events-none`}>
+            <motion.div 
+              className={`absolute inset-0 w-full ${proj.isReduced ? 'h-[110%] top-0' : 'h-[100%] md:h-[120%] top-0 md:top-[-10%]'} pointer-events-none`}
+              style={{ 
+                y: proj.isReduced ? yReduced : yNormal, 
+                scale: (proj as any).scale ? (proj as any).scale : (proj.isReduced ? 1.05 : scaleNormal)
+              }}
+            >
+               <Image 
+                 src={proj.src} 
+                 alt={proj.title}
+                 fill
+                 unoptimized
+                 className={`${proj.isReduced ? (proj.id === 3 ? 'object-contain object-top' : 'object-contain md:object-cover object-center md:object-bottom md:object-right') : 'object-cover md:object-cover rounded-xl md:rounded-none'} brightness-[1.0] pointer-events-none`}
+               />
+            </motion.div>
+         </div>
       </div>
     </section>
   );

@@ -69,6 +69,64 @@ function BoldArrow({ className = '' }: { className?: string }) {
 // Image height = full expanded panel height (fills white space up to the title row)
 const IMG_H = 300;
 
+function MobileProjectRow({
+  proj,
+  index,
+}: {
+  proj: typeof PROJECTS[0];
+  index: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-4%' }}
+      transition={{ duration: 0.7, ease: [0.215, 0.61, 0.355, 1], delay: index * 0.05 }}
+      className="flex flex-col gap-5 w-full mb-16"
+    >
+      <Link href={`/projects/${proj.id}`} className="block w-full">
+        {/* Large Thumbnail */}
+        <div className="w-full aspect-[4/3] bg-[#f5f5f5] overflow-hidden">
+          <img 
+            src={proj.cover} 
+            alt={proj.title} 
+            className="w-full h-full object-cover" 
+          />
+        </div>
+      </Link>
+
+      <div className="flex flex-col gap-3 px-1">
+        {/* Header: Title and Year */}
+        <div className="flex justify-between items-start gap-4">
+          <Link href={`/projects/${proj.id}`}>
+            <h2 className="font-bold tracking-tighter uppercase leading-none text-4xl sm:text-5xl">
+              {proj.title}
+            </h2>
+          </Link>
+          <span className="font-mono text-[10px] tracking-[0.25em] text-black/30 mt-1 shrink-0">
+            {proj.year}
+          </span>
+        </div>
+
+        {/* Sub-header: Type and Index */}
+        <div className="flex justify-between items-center border-b border-black/10 pb-4">
+          <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-black/50">
+            {proj.type}
+          </span>
+          <span className="font-mono text-[9px] tracking-[0.35em] text-black/20 select-none">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </div>
+
+        {/* Description */}
+        <p className="font-sans text-black/60 leading-relaxed text-sm pt-2">
+          {proj.description}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
 function ProjectRow({
   proj,
   index,
@@ -238,8 +296,8 @@ export default function WorkIndex() {
         </p>
       </motion.div>
 
-      {/* ── Vertical project list ──────────────────────────────── */}
-      <div className="w-full flex flex-col">
+      {/* ── Vertical project list (Desktop) ──────────────────────── */}
+      <div className="hidden md:flex w-full flex-col">
         {PROJECTS.map((proj, i) => (
           <ProjectRow
             key={proj.id}
@@ -247,6 +305,17 @@ export default function WorkIndex() {
             index={i}
             anyHovered={activeId !== null}
             onHover={setActiveId}
+          />
+        ))}
+      </div>
+
+      {/* ── Vertical project list (Mobile) ───────────────────────── */}
+      <div className="flex md:hidden w-full flex-col mt-8">
+        {PROJECTS.map((proj, i) => (
+          <MobileProjectRow
+            key={proj.id}
+            proj={proj}
+            index={i}
           />
         ))}
       </div>
