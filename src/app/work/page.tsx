@@ -1,7 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 
 const PROJECTS = [
@@ -47,86 +47,61 @@ const PROJECTS = [
   },
 ];
 
-// Identical to the BoldArrow in project detail pages
-function BoldArrow({ className = '' }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      stroke="currentColor"
-      strokeWidth="5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="7" y1="17" x2="17" y2="7" />
-      <polyline points="7 7 17 7 17 17" />
-    </svg>
-  );
-}
+/* ── Image-cursor that follows the mouse on the desktop list ── */
+function ImageCursor({ activeCover }: { activeCover: string | null }) {
+  const [pos, setPos] = useState({ x: -999, y: -999 });
+  const raf = useRef<number | null>(null);
+  const target = useRef({ x: -999, y: -999 });
+  const current = useRef({ x: -999, y: -999 });
 
-// Image height = full expanded panel height (fills white space up to the title row)
-const IMG_H = 300;
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      target.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener('mousemove', onMove);
 
-function MobileProjectRow({
-  proj,
-  index,
-}: {
-  proj: typeof PROJECTS[0];
-  index: number;
-}) {
+    const loop = () => {
+      // Smooth lerp following
+      current.current.x += (target.current.x - current.current.x) * 0.12;
+      current.current.y += (target.current.y - current.current.y) * 0.12;
+      setPos({ x: current.current.x, y: current.current.y });
+      raf.current = requestAnimationFrame(loop);
+    };
+    raf.current = requestAnimationFrame(loop);
+
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      if (raf.current) cancelAnimationFrame(raf.current);
+    };
+  }, []);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-4%' }}
-      transition={{ duration: 0.7, ease: [0.215, 0.61, 0.355, 1], delay: index * 0.05 }}
-      className="flex flex-col gap-5 w-full mb-16"
+    <div
+      className="fixed top-0 left-0 pointer-events-none z-[9998]"
+      style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
     >
-      <Link href={`/projects/${proj.id}`} className="block w-full">
-        {/* Large Thumbnail */}
-        <div className="w-full aspect-[4/3] bg-[#f5f5f5] overflow-hidden">
-          <img 
-            src={proj.cover} 
-            alt={proj.title} 
-            className="w-full h-full object-cover" 
+      <AnimatePresence mode="wait">
+        {activeCover && (
+          <motion.img
+            key={activeCover}
+            src={activeCover}
+            alt=""
+            initial={{ opacity: 0, scale: 0.75, x: '-50%', y: '-50%' }}
+            animate={{ opacity: 1, scale: 1, x: '-50%', y: '-50%' }}
+            exit={{ opacity: 0, scale: 0.8, x: '-50%', y: '-50%' }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="w-[280px] h-auto block"
+            style={{ x: '-50%', y: '-50%' }}
           />
-        </div>
-      </Link>
-
-      <div className="flex flex-col gap-3 px-1">
-        {/* Header: Title and Year */}
-        <div className="flex justify-between items-start gap-4">
-          <Link href={`/projects/${proj.id}`}>
-            <h2 className="font-bold tracking-tighter uppercase leading-none text-4xl sm:text-5xl">
-              {proj.title}
-            </h2>
-          </Link>
-          <span className="font-mono text-[10px] tracking-[0.25em] text-black/30 mt-1 shrink-0">
-            {proj.year}
-          </span>
-        </div>
-
-        {/* Sub-header: Type and Index */}
-        <div className="flex justify-between items-center border-b border-black/10 pb-4">
-          <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-black/50">
-            {proj.type}
-          </span>
-          <span className="font-mono text-[9px] tracking-[0.35em] text-black/20 select-none">
-            {String(index + 1).padStart(2, '0')}
-          </span>
-        </div>
-
-        {/* Description */}
-        <p className="font-sans text-black/60 leading-relaxed text-sm pt-2">
-          {proj.description}
-        </p>
-      </div>
-    </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
+
+
+/* ── Desktop project row — no expanding panel ── */
 function ProjectRow({
   proj,
   index,
@@ -136,12 +111,11 @@ function ProjectRow({
   proj: typeof PROJECTS[0];
   index: number;
   anyHovered: boolean;
-  onHover: (id: number | null) => void;
+  onHover: (proj: typeof PROJECTS[0] | null) => void;
 }) {
   const [hovered, setHovered] = useState(false);
 
   return (
-    // Scroll-in entry animation
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -151,17 +125,16 @@ function ProjectRow({
       <Link
         href={`/projects/${proj.id}`}
         className="block cursor-none"
-        onMouseEnter={() => { setHovered(true); onHover(proj.id); }}
+        data-cursor="image"
+        onMouseEnter={() => { setHovered(true); onHover(proj); }}
         onMouseLeave={() => { setHovered(false); onHover(null); }}
       >
-        {/* Dimming wrapper — non-hovered rows fade out */}
+        {/* Dimming wrapper */}
         <motion.div
           className="w-full border-b border-black/10"
           animate={{ opacity: anyHovered && !hovered ? 0.15 : 1 }}
           transition={{ duration: 0.28, ease: 'easeOut' }}
         >
-
-          {/* ── Always-visible row header ──────────────────────────── */}
           <div className="flex items-center py-5 md:py-8 gap-5 md:gap-10 w-full">
 
             {/* Index number */}
@@ -179,14 +152,6 @@ function ProjectRow({
               {proj.title}
             </motion.span>
 
-            {/* Bold Arrow — same style as MORE button, appears on hover */}
-            <motion.div
-              className="shrink-0"
-              animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : -14 }}
-              transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <BoldArrow className="w-5 h-5 md:w-6 md:h-6" />
-            </motion.div>
 
             {/* Spacer */}
             <div className="flex-1" />
@@ -201,138 +166,133 @@ function ProjectRow({
               {proj.year}
             </span>
           </div>
-
-          {/* ── Expandable panel ─────────────────────────────────────── */}
-          {/* height: 'auto' lets the panel grow to fit description; minHeight ensures image is fully visible */}
-          <motion.div
-            className="w-full overflow-hidden"
-            initial={false}
-            animate={{ height: hovered ? 'auto' : 0 }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {/* Container is exactly IMG_H tall — image fills it flush, no dead space */}
-            <div className="relative" style={{ minHeight: `${IMG_H}px` }}>
-
-              {/* Description — internal padding keeps text off the edges */}
-              <motion.div
-                style={{
-                  paddingLeft: 'calc(1.25rem + 2rem)',
-                  paddingTop: '8px',
-                  paddingBottom: '32px',
-                  maxWidth: '38%',
-                }}
-                animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 10 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: hovered ? 0.18 : 0 }}
-              >
-                <p
-                  className="font-sans text-black/50 leading-relaxed"
-                  style={{
-                    fontSize: 'clamp(0.78rem, 1.2vw, 0.96rem)',
-                    fontWeight: 400,
-                    letterSpacing: '0.01em',
-                  }}
-                >
-                  {proj.description}
-                </p>
-              </motion.div>
-
-              {/* Image — clip-reveal from the bottom border.
-                  Container sits flush with the bottom bar (bottom:0, overflow:hidden).
-                  Image starts at y=IMG_H (below the clip → invisible) then slides up
-                  to y=0 only AFTER the panel has finished expanding (delay = 0.62s). */}
-              <div style={{
-                position: 'absolute',
-                bottom: 0,
-                left: '55%',
-                transform: 'translateX(-50%)',
-                height: `${IMG_H}px`,
-                overflow: 'hidden',
-              }}>
-                <motion.div
-                  animate={{ y: hovered ? 0 : IMG_H }}
-                  transition={{
-                    duration: hovered ? 0.75 : 0.35,
-                    ease: [0.16, 1, 0.3, 1],
-                    delay: 0,
-                  }}
-                >
-                  <img
-                    src={proj.cover}
-                    alt={proj.title}
-                    style={{ height: `${IMG_H}px`, width: 'auto', display: 'block' }}
-                  />
-                </motion.div>
-              </div>
-
-            </div>
-          </motion.div>
-
         </motion.div>
       </Link>
     </motion.div>
   );
 }
 
+/* ── Mobile project row (unchanged) ── */
+function MobileProjectRow({
+  proj,
+  index,
+}: {
+  proj: typeof PROJECTS[0];
+  index: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-4%' }}
+      transition={{ duration: 0.7, ease: [0.215, 0.61, 0.355, 1], delay: index * 0.05 }}
+      className="flex flex-col gap-5 w-full mb-16"
+    >
+      <Link href={`/projects/${proj.id}`} className="block w-full">
+        <div className="w-full aspect-[4/3] bg-[#f5f5f5] overflow-hidden">
+          <img
+            src={proj.cover}
+            alt={proj.title}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </Link>
+
+      <div className="flex flex-col gap-3 px-1">
+        <div className="flex justify-between items-start gap-4">
+          <Link href={`/projects/${proj.id}`}>
+            <h2 className="font-bold tracking-tighter uppercase leading-none text-4xl sm:text-5xl">
+              {proj.title}
+            </h2>
+          </Link>
+          <span className="font-mono text-[10px] tracking-[0.25em] text-black/30 mt-1 shrink-0">
+            {proj.year}
+          </span>
+        </div>
+
+        <div className="flex justify-between items-center border-b border-black/10 pb-4">
+          <span className="font-mono text-[9px] tracking-[0.2em] uppercase text-black/50">
+            {proj.type}
+          </span>
+          <span className="font-mono text-[9px] tracking-[0.35em] text-black/20 select-none">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+        </div>
+
+        <p className="font-sans text-black/60 leading-relaxed text-sm pt-2">
+          {proj.description}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ── Page ── */
 export default function WorkIndex() {
-  const [activeId, setActiveId] = useState<number | null>(null);
+  const [activeProj, setActiveProj] = useState<typeof PROJECTS[0] | null>(null);
 
   return (
     <div className="relative w-full min-h-screen bg-white text-black pt-28 md:pt-36 pb-96 px-6 md:px-12 cursor-none">
-      {/* overflow-x wrapper kept separate so it never clips vertical content */}
+
+      {/* Image-cursor — desktop only (hidden on mobile via pointer media) */}
+      <div className="hidden md:block">
+        <ImageCursor activeCover={activeProj?.cover ?? null} />
+      </div>
+
       <div className="w-full" style={{ overflowX: 'clip' }}>
 
-      {/* ── Page header ─────────────────────────────────────────── */}
-      <motion.div
-        className="w-full flex justify-between items-end border-b border-black/15 pb-4 mb-0 mt-6"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}
-      >
-        <h1 className="text-2xl md:text-4xl font-bold tracking-tighter uppercase leading-none">
-          INDEX
-        </h1>
-        <p className="font-mono text-[10px] opacity-40 uppercase tracking-[0.3em] hidden md:block self-end pb-1">
-          Pietro Nascimben · Selected Works
-        </p>
-      </motion.div>
+        {/* ── Page header ── */}
+        <motion.div
+          className="w-full flex justify-between items-end border-b border-black/15 pb-4 mb-0 mt-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}
+        >
+          <h1 className="text-2xl md:text-4xl font-bold tracking-tighter uppercase leading-none">
+            INDEX
+          </h1>
+          <p className="font-mono text-[10px] opacity-40 uppercase tracking-[0.3em] hidden md:block self-end pb-1">
+            Pietro Nascimben · Selected Works
+          </p>
+        </motion.div>
 
-      {/* ── Vertical project list (Desktop) ──────────────────────── */}
-      <div className="hidden md:flex w-full flex-col">
-        {PROJECTS.map((proj, i) => (
-          <ProjectRow
-            key={proj.id}
-            proj={proj}
-            index={i}
-            anyHovered={activeId !== null}
-            onHover={setActiveId}
-          />
-        ))}
+        {/* ── Desktop list ── */}
+        <div className="hidden md:flex w-full flex-col">
+          {PROJECTS.map((proj, i) => (
+            <ProjectRow
+              key={proj.id}
+              proj={proj}
+              index={i}
+              anyHovered={activeProj !== null}
+              onHover={setActiveProj}
+            />
+          ))}
+        </div>
+
+        {/* ── Mobile list ── */}
+        <div className="flex md:hidden w-full flex-col mt-8">
+          {PROJECTS.map((proj, i) => (
+            <MobileProjectRow
+              key={proj.id}
+              proj={proj}
+              index={i}
+            />
+          ))}
+        </div>
+
+        {/* ── Footer count ── */}
+        <motion.div
+          className="mt-10 flex justify-end"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.6 }}
+        >
+          <span className="font-mono text-[9px] tracking-[0.35em] text-black/20 uppercase">
+            {PROJECTS.length} projects total
+          </span>
+        </motion.div>
+
       </div>
-
-      {/* ── Vertical project list (Mobile) ───────────────────────── */}
-      <div className="flex md:hidden w-full flex-col mt-8">
-        {PROJECTS.map((proj, i) => (
-          <MobileProjectRow
-            key={proj.id}
-            proj={proj}
-            index={i}
-          />
-        ))}
-      </div>
-
-      {/* ── Footer count ─────────────────────────────────────── */}
-      <motion.div
-        className="mt-10 flex justify-end"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.6 }}
-      >
-        <span className="font-mono text-[9px] tracking-[0.35em] text-black/20 uppercase">
-          {PROJECTS.length} projects total
-        </span>
-      </motion.div>
-
-      </div>{/* end overflow-x:clip wrapper */}
     </div>
   );
 }

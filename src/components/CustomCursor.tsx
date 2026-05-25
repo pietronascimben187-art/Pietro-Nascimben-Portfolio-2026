@@ -14,8 +14,13 @@ export function CustomCursor() {
       const target = e.target as HTMLElement;
       const onNav = target.closest('[data-cursor="nav"]') !== null;
       const disableArrow = target.closest('[data-cursor="no-arrow"]') !== null;
+      const onImage = target.closest('[data-cursor="image"]') !== null;
 
       if (onNav) {
+        setIsNavHovered(true);
+        setIsHovered(false);
+      } else if (onImage) {
+        // Hide cursor entirely — image is the cursor
         setIsNavHovered(true);
         setIsHovered(false);
       } else if (
