@@ -10,6 +10,20 @@ const PROJECTS = [
 // ... we will splice properly below
 
   {
+    id: 6,
+    title: 'AEGIS',
+    type: 'ADAPTIVE DEVICES',
+    year: '2026',
+    src: '/images/projects/AEGIS/Copertina.png',
+    client: 'Thesis Project',
+    bg: 'black',
+    color: 'white',
+    isReduced: false,
+    scale: 1.0,
+    objectPosition: 'center bottom',
+    offsetY: -25
+  },
+  {
     id: 1,
     title: 'THE BLISTER',
     type: 'SPORTS AND PRODUCT DESIGN',
@@ -125,21 +139,23 @@ function ParallaxSlide({ proj }: { proj: typeof PROJECTS[0] }) {
          </Link>
       </div>
 
-      {/* ── Image Container (Bottom flex-1 on mobile, absolute inset-0 on desktop) ── */}
+       {/* ── Image Container (Bottom flex-1 on mobile, absolute inset-0 on desktop) ── */}
       <div className={`relative flex-1 mt-8 mb-12 md:m-0 md:absolute md:inset-0 w-full md:h-full flex ${proj.isReduced ? (proj.id === 1 ? 'items-end justify-center md:justify-end' : proj.id === 5 ? 'items-center md:items-start justify-center md:justify-end' : 'items-center justify-center md:justify-end') : 'items-center justify-center md:items-center md:justify-center'} overflow-hidden pointer-events-none`}>
-         <div className={`relative ${proj.isReduced ? 'w-[90vw] md:w-[80vw] h-[100%] md:h-[80vh] z-20' : 'w-[90vw] md:w-full h-full md:overflow-hidden'} pointer-events-none`}>
+         <div className={`relative ${proj.isReduced ? 'w-[90vw] md:w-[80vw] h-[100%] md:h-[80vh] z-20' : 'w-full h-full md:overflow-hidden'} pointer-events-none`}>
             <motion.div 
-              className={`absolute inset-0 w-full ${proj.isReduced ? 'h-[110%] top-0' : 'h-[100%] md:h-[120%] top-0 md:top-[-10%]'} pointer-events-none`}
-              style={{ 
-                y: proj.isReduced ? yReduced : yNormal, 
-                scale: (proj as any).scale ? (proj as any).scale : (proj.isReduced ? 1.05 : scaleNormal)
-              }}
+              className={`absolute inset-0 w-full ${proj.isReduced ? 'h-[110%] top-0' : 'h-[100%] md:h-[130%] top-0 md:top-[-15%]'} pointer-events-none`}
+               style={{ 
+                 y: proj.isReduced ? yReduced : yNormal, 
+                 scale: (proj as any).scale ? (proj as any).scale : (proj.isReduced ? 1.05 : scaleNormal),
+                 translateY: (proj as any).offsetY ? (proj as any).offsetY : 0
+               }}
             >
                <Image 
                  src={proj.src} 
                  alt={proj.title}
                  fill
                  unoptimized
+                 style={{ objectPosition: (proj as any).objectPosition || 'center center' }}
                  className={`${proj.isReduced ? (proj.id === 3 ? 'object-contain object-top' : 'object-contain md:object-cover object-center md:object-bottom md:object-right') : 'object-cover md:object-cover rounded-xl md:rounded-none'} brightness-[1.0] pointer-events-none`}
                />
             </motion.div>

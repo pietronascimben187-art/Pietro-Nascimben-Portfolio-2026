@@ -45,6 +45,14 @@ const PROJECTS = [
     cover: '/images/projects/Mold.e/1.png?v=2',
     description: "MOLD.E explores the intersection of organic growth and synthetic structure, pushing the boundaries of material research and design.",
   },
+  {
+    id: 6,
+    title: 'AEGIS',
+    type: 'ADAPTIVE DEVICES',
+    year: '2026',
+    cover: '/images/projects/AEGIS/cursore.png?v=2',
+    description: "Aegis aims to make the entire world of motorcycles more accessible to those who want to return but also who want to approach it through a simple extra movement added to the balance support.",
+  },
 ];
 
 /* ── Image-cursor that follows the mouse on the desktop list ── */

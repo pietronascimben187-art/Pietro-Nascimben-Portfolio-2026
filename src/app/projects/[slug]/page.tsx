@@ -356,6 +356,91 @@ const PROJECT_DB = {
       }
     ],
     pdfPresentation: '/images/projects/Mold.e/V3.pdf'
+  },
+  '6': {
+    title: 'AEGIS',
+    client: 'Thesis Project',
+    director: 'Pietro Nascimben',
+    type: 'Adaptive Devices',
+    description: "Aegis aims to make the entire world of motorcycles more accessible to those who want to return but also who want to approach it through a simple extra movement added to the balance support.",
+    heroBg: 'white',
+    heroTextColor: 'black',
+    heroImageScale: 1.0,
+    heroObjectPosition: 'center bottom',
+    heroImageOffsetY: 0,
+    cover: '/images/projects/AEGIS/Copertina.png',
+    problemSection: {
+      image: '/images/projects/AEGIS/1.png',
+      fullWidthImage: '/images/projects/AEGIS/8.png',
+      title: 'The Problem',
+      text: [
+        "The motorcycle market is a dynamic and highly diverse environment, including many different niche sectors related to different gadgets and accessories for the riding experience.",
+        "Within this market, there is a whole segment dedicated to those who have suffered injuries and who need adaptations to re-drive the vehicle. Many of these adaptations relate to permanent injuries such as limb loss."
+      ]
+    },
+    gallery: [
+      {
+        format: 'two-col-images',
+        src: '/images/projects/AEGIS/snodo.mp4',
+        overlaySrc: '/images/projects/AEGIS/1.mp4'
+      },
+      {
+        src: '/images/projects/AEGIS/misure.mp4',
+        format: 'full-video-loop',
+        playbackRate: 1.1
+      },
+      {
+        format: 'two-col-images',
+        src: '/images/projects/AEGIS/anima.png',
+        overlaySrc: '/images/projects/AEGIS/Apertura.mp4',
+        title: 'Tubular Soul',
+        caption: 'The tubular core composed of a series of vertebral-like elements that fit together provides structural support both with the trestle closed and open.\n\nFurthermore, given the characteristic of the elements intersecting via a limit switch in the event of a mechanical failure, the stand cannot be extended beyond the maximum limit.',
+        titleRight: 'Opening System',
+        captionRight: 'Given the lack of strength in the stabilising muscles of the lumbar region or in the legs, due to nerve damage or crushing of the vertebrae, it is necessary to adopt different solutions.'
+      },
+      {
+        format: 'setup-timeline',
+        title: 'USER JOURNEY',
+        src: '',
+        steps: [
+          { number: 1, label: 'Approach', image: '/images/projects/AEGIS/ux/1.png' },
+          { number: 2, label: 'Open the stand', image: '/images/projects/AEGIS/ux/2.png' },
+          { number: 3, label: 'Tilting and physical approach', image: '/images/projects/AEGIS/ux/3.png' },
+          { number: 4, label: 'Getting up on the vehicle', image: '/images/projects/AEGIS/ux/4.png' },
+          { number: 5, label: 'Locking on the bike', image: '/images/projects/AEGIS/ux/5.png', scale: 1.5 },
+          { number: 6, label: 'Collect the wheelchair', image: '/images/projects/AEGIS/ux/6.png', scale: 1.5 },
+          { number: 7, label: 'Put the stand in movment', image: '/images/projects/AEGIS/ux/7.png' },
+          { number: 8, label: 'Select the target speed of activation', image: '/images/projects/AEGIS/ux/8.png', scale: 1.5 },
+          { number: 9, label: 'Ready to go', image: '/images/projects/AEGIS/ux/9.png' }
+        ]
+      },
+      {
+        format: 'side-video-text',
+        src: '/images/projects/AEGIS/Staffe.mp4',
+        title: 'Compatibility',
+        text: [
+          "The customized bracket, the second of the model, allows the application of this system to very different motorcycles. In this way, accessibility increases and many vehicle categories become easier to operate.",
+          "However, the most suitable vehicles remain those with a relatively low centre of gravity and linear, non-curved saddling."
+        ]
+      },
+      {
+        format: 'customization-carousel',
+        images: [
+          '/images/projects/AEGIS/k1.png',
+          '/images/projects/AEGIS/k2.png',
+          '/images/projects/AEGIS/k3.png',
+          '/images/projects/AEGIS/k4.png'
+        ],
+        watermark: 'CUSTOMIZATION'
+      },
+      { 
+        src: '/images/projects/AEGIS/Pietro Nascimben loop Esposzione Aegis.mp4', 
+        format: 'video-player',
+        title: 'Pietro Nascimben loop Esposizione Aegis',
+        quote: 'Autonomy is identity'
+      }
+    ],
+    pdfPresentation: ''
   }
 };
 
@@ -384,21 +469,21 @@ function SetupTimeline({ steps }: { steps: Array<{ number: number; label: string
               viewport={{ once: true, margin: '0px 0px -10% 0px' }}
               transition={{ duration: 0.7, delay: i * 0.12, ease: [0.215, 0.61, 0.355, 1] }}
             >
-              {i < 3 ? (
-                /* Steps 1-3: natural image height, no bottom padding, box ends at subject */
-                <div style={{ width: '100%', backgroundColor: '#f5f5f5', overflow: 'hidden' }}>
+                <div style={{ width: '100%', position: 'relative', overflow: 'hidden', backgroundColor: 'transparent' }}>
                   <img
                     src={step.image}
-                    alt={step.label}
-                    style={{ width: '100%', height: 'auto', display: 'block', padding: '1.5rem 1.5rem 0 1.5rem' }}
+                    alt={step.label || `Step ${step.number}`}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      maxHeight: '450px',
+                      objectFit: 'contain',
+                      objectPosition: 'center',
+                      transform: (step as any).scale ? `scale(${(step as any).scale})` : 'none',
+                      display: 'block'
+                    }}
                   />
                 </div>
-              ) : (
-                /* Step 4: fixed aspect ratio, centered */
-                <div style={{ width: '100%', aspectRatio: '4/3', backgroundColor: '#f5f5f5', overflow: 'hidden' }}>
-                  <img src={step.image} alt={step.label} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '1.5rem' }} />
-                </div>
-              )}
             </motion.div>
           ))}
         </div>
@@ -847,6 +932,240 @@ function ImageComparisonSlider({
   );
 }
 
+function InteractiveVideoPlayer({ src, title = "Exposizione Loop" }: { src: string; title?: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isSeeking, setIsSeeking] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleTimeUpdate = () => {
+      if (!isSeeking && video) {
+        setCurrentTime(video.currentTime);
+      }
+    };
+
+    const handleLoadedMetadata = () => {
+      if (video) {
+        setDuration(video.duration);
+      }
+    };
+
+    video.addEventListener('timeupdate', handleTimeUpdate);
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+    return () => {
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    };
+  }, [isSeeking]);
+
+  const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (isPlaying) {
+      video.pause();
+      setIsPlaying(false);
+    } else {
+      video.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handleSeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const time = parseFloat(e.target.value);
+    setCurrentTime(time);
+    if (videoRef.current) {
+      videoRef.current.currentTime = time;
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    if (isNaN(seconds) || seconds < 0) return '00:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  };
+
+  return (
+    <AnimatedImageWrapper>
+      <div className="relative w-full bg-black border border-black/10 overflow-hidden rounded-sm flex flex-col group">
+        {/* Video Screen */}
+        <div className="relative w-full bg-black flex items-center justify-center overflow-hidden">
+          <video
+            ref={videoRef}
+            src={src}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-auto max-h-[85vh] object-contain cursor-pointer block"
+            onClick={togglePlay}
+          />
+        </div>
+
+        {/* Minimalist Bottom Control Bar */}
+        <div className="w-full bg-black text-white px-4 md:px-8 py-3.5 flex flex-col gap-3 pointer-events-auto border-t border-white/10 select-none">
+          
+          {/* Interactive Timeline Scrubber Slider */}
+          <div className="relative w-full flex items-center">
+            <input
+              type="range"
+              min={0}
+              max={duration || 100}
+              step={0.01}
+              value={currentTime}
+              onMouseDown={() => setIsSeeking(true)}
+              onMouseUp={() => setIsSeeking(false)}
+              onTouchStart={() => setIsSeeking(true)}
+              onTouchEnd={() => setIsSeeking(false)}
+              onChange={handleSeekChange}
+              className="w-full h-2 bg-white/20 appearance-none cursor-pointer accent-white hover:bg-white/30 transition-all"
+              style={{
+                background: `linear-gradient(to right, #ffffff ${(currentTime / (duration || 1)) * 100}%, rgba(255, 255, 255, 0.2) ${(currentTime / (duration || 1)) * 100}%)`
+              }}
+            />
+          </div>
+
+          {/* Controls Footer Info */}
+          <div className="flex justify-between items-center text-[10px] md:text-xs font-mono tracking-[0.2em] uppercase">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={togglePlay}
+                className="hover:text-white/70 transition-colors uppercase font-bold tracking-widest flex items-center gap-2 cursor-pointer"
+              >
+                {isPlaying ? (
+                  <>
+                    <span className="w-2 h-2 bg-white rounded-full animate-pulse inline-block" />
+                    PAUSE
+                  </>
+                ) : (
+                  <>
+                    <span className="w-2 h-2 bg-white/50 rounded-full inline-block" />
+                    PLAY
+                  </>
+                )}
+              </button>
+              <span className="text-white/30">/</span>
+              <span className="text-white/70 font-bold">{title}</span>
+            </div>
+
+            <div className="flex items-center gap-3 text-white/70 font-mono">
+              <span>{formatTime(currentTime)}</span>
+              <span className="text-white/30">|</span>
+              <span>{formatTime(duration)}</span>
+              <span className="text-white/30">/</span>
+              <span className="text-white/40 tracking-[0.25em]">:LOOP</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </AnimatedImageWrapper>
+  );
+}
+
+function FullVideoLoop({ src, playbackRate = 1.1 }: { src: string; playbackRate?: number }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = playbackRate;
+    }
+  }, [playbackRate]);
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+      className="relative w-full px-6 md:px-12 z-0 overflow-hidden"
+      style={{ marginTop: '-240px' }}
+    >
+      <div className="w-full overflow-hidden rounded-sm">
+        <video
+          ref={videoRef}
+          src={src}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-auto object-cover block"
+        />
+      </div>
+    </motion.div>
+  );
+}
+
+function InfiniteCarouselWithWatermark({ 
+  images, 
+  watermark = "CUSTOMIZATION" 
+}: { 
+  images: string[]; 
+  watermark?: string 
+}) {
+  // Multiply images so scrolling loop is 100% seamless and never breaks
+  const quadrupledImages = [...images, ...images, ...images, ...images];
+
+  return (
+    <section className="relative w-full py-16 md:py-24 bg-white overflow-hidden pointer-events-auto z-10 border-t border-black/5">
+      {/* Title above carousel */}
+      {watermark && (
+        <div className="w-full px-6 md:px-12 mb-8 md:mb-12">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tighter uppercase text-black leading-none">
+            {watermark}
+          </h2>
+        </div>
+      )}
+
+      {/* Infinite Horizontal Looping Carousel Container (Left to Right) */}
+      <div className="relative w-full overflow-hidden z-10">
+        <motion.div
+          className="flex gap-6 md:gap-10 w-max"
+          animate={{ x: ['-50%', '0%'] }}
+          transition={{
+            repeat: Infinity,
+            repeatType: 'loop',
+            duration: 30,
+            ease: 'linear',
+          }}
+        >
+          {quadrupledImages.map((src, i) => (
+            <div
+              key={i}
+              className="relative shrink-0 w-[75vw] sm:w-[46vw] md:w-[42vw] lg:w-[38vw] aspect-video bg-neutral-50 rounded-sm overflow-hidden border border-black/5 shadow-sm flex items-center justify-center"
+            >
+              <img
+                src={src}
+                alt={`Customization ${i + 1}`}
+                className="w-full h-full object-contain object-center block"
+              />
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function BrokenBoneIcon({ className = "w-10 h-10" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      {/* Upper bone part */}
+      <path d="M 16 16 C 10 12 10 24 16 26 L 28 34 L 33 29 L 21 21 C 18 19 20 14 16 16 Z" fill="currentColor" fillOpacity="0.12" />
+      {/* Lower bone part */}
+      <path d="M 35 35 L 31 39 L 43 47 C 45 49 45 54 49 52 C 53 50 53 38 47 37 L 35 35 Z" fill="currentColor" fillOpacity="0.12" />
+      {/* Sharp central fracture Line */}
+      <path d="M 27 28 L 35 33 L 30 38 L 38 43" stroke="currentColor" strokeWidth="3" />
+    </svg>
+  );
+}
+
 function InteractiveImageSlider({ slides, interval = 8000 }: { slides: { src: string, title?: string, text?: string }[], interval?: number }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -1009,6 +1328,82 @@ function LensFocusWords({ words }: { words: string[] }) {
   );
 }
 
+function HorizontalLensFocusWords({ words = ["ASSISTIVE", "PLUG IN", "ARCHITECTURE"] }: { words?: string[] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [lensStyle, setLensStyle] = useState<{ left: number; width: number }>({ left: 0, width: 0 });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex(prev => (prev + 1) % words.length);
+    }, 2400);
+    return () => clearInterval(timer);
+  }, [words.length]);
+
+  useEffect(() => {
+    const updateLens = () => {
+      const activeEl = itemRefs.current[activeIndex];
+      const container = containerRef.current;
+      if (activeEl && container) {
+        const elRect = activeEl.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        setLensStyle({
+          left: elRect.left - containerRect.left - 10,
+          width: elRect.width + 20,
+        });
+      }
+    };
+    updateLens();
+    window.addEventListener('resize', updateLens);
+    return () => window.removeEventListener('resize', updateLens);
+  }, [activeIndex, words]);
+
+  return (
+    <div ref={containerRef} className="relative inline-flex items-center justify-center gap-4 sm:gap-8 md:gap-12 py-3 px-2">
+      {/* Sliding Lens Frame: Top & Bottom horizontal lines tracking active word */}
+      {lensStyle.width > 0 && (
+        <motion.div
+          className="absolute pointer-events-none z-10"
+          animate={{
+            left: lensStyle.left,
+            width: lensStyle.width,
+          }}
+          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+          style={{ top: 0, bottom: 0 }}
+        >
+          {/* Top horizontal rule */}
+          <div className="absolute top-0 left-0 w-full h-[1.5px] bg-black/60" />
+          {/* Bottom horizontal rule */}
+          <div className="absolute bottom-0 left-0 w-full h-[1.5px] bg-black/60" />
+        </motion.div>
+      )}
+
+      {/* Words Row */}
+      {words.map((word, i) => {
+        const dist = Math.abs(i - activeIndex);
+        const isActive = i === activeIndex;
+        return (
+          <motion.span
+            key={word + i}
+            ref={el => { itemRefs.current[i] = el; }}
+            animate={{
+              opacity: isActive ? 1 : dist === 1 ? 0.3 : 0.1,
+              filter: isActive ? 'blur(0px)' : `blur(${dist * 1.5}px)`,
+              scale: isActive ? 1.04 : 0.94,
+            }}
+            transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+            className="font-mono font-bold text-black uppercase select-none tracking-[0.25em] text-xs sm:text-sm md:text-base lg:text-xl whitespace-nowrap cursor-pointer relative z-0"
+            onClick={() => setActiveIndex(i)}
+          >
+            {word}
+          </motion.span>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function ProjectDetail() {
   const params = useParams();
   const slug = params.slug as string;
@@ -1051,7 +1446,10 @@ export default function ProjectDetail() {
           fill 
           unoptimized 
           className={`pointer-events-none ${(proj as any).heroImageFit === 'contain' ? 'object-contain' : 'object-cover'}`} 
-          style={{ transform: `scale(${(proj as any).heroImageScale || 1}) translateY(${(proj as any).heroImageOffsetY || 0}px)` }}
+          style={{ 
+            objectPosition: (proj as any).heroObjectPosition || 'center center',
+            transform: `scale(${(proj as any).heroImageScale || 1}) translateY(${(proj as any).heroImageOffsetY || 0}px)` 
+          }}
           priority 
         />
         
@@ -1088,7 +1486,135 @@ export default function ProjectDetail() {
           </div>
        </section>
 
-       {/* 3. Specialized Detail Section (Intro Image + Secondary Description) */}
+        {/* Problem Section: Left Image 1 (50%), Right Title & Text (50%) */}
+        {(proj as any).problemSection && (
+          <section className="relative w-full px-6 md:px-12 bg-white flex flex-col pointer-events-auto z-10 py-16 md:py-24 border-t border-black/5">
+            <div className="flex flex-col md:flex-row items-center gap-12 md:gap-24">
+              {/* Left Column (1/2): Image 1 */}
+              <motion.div 
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full md:w-1/2 overflow-hidden rounded-sm"
+              >
+                <img 
+                  src={(proj as any).problemSection.image} 
+                  alt={(proj as any).problemSection.title || "Project Image"} 
+                  className="w-full h-auto object-cover block"
+                />
+              </motion.div>
+
+              {/* Right Column (1/2): Title & Text */}
+              <motion.div 
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                className="w-full md:w-1/2 flex flex-col justify-center gap-6"
+              >
+                <h2 className="text-3xl md:text-5xl font-bold tracking-tighter uppercase text-black leading-none mb-2">
+                  {(proj as any).problemSection.title}
+                </h2>
+                {Array.isArray((proj as any).problemSection.text) ? (
+                  (proj as any).problemSection.text.map((paragraph: string, idx: number) => (
+                    <p key={idx} className="text-xl md:text-2xl lg:text-[1.65rem] font-medium tracking-tight leading-[1.35] text-black/80">
+                      {paragraph}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-xl md:text-2xl lg:text-[1.65rem] font-medium tracking-tight leading-[1.35] text-black/80 whitespace-pre-line">
+                    {(proj as any).problemSection.text}
+                  </p>
+                )}
+
+                {/* Animated 75% Percentage Donut Chart with Broken Bone Icon */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="mt-4 pt-6 border-t border-black/10 flex items-center gap-6 md:gap-8"
+                >
+                  {/* Donut Circle Chart with Centered Broken Bone Icon */}
+                  <div className="relative w-32 h-32 md:w-40 md:h-40 shrink-0 flex items-center justify-center">
+                    <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 160 160">
+                      {/* Background Track Circle */}
+                      <circle
+                        cx="80"
+                        cy="80"
+                        r="68"
+                        stroke="rgba(0,0,0,0.08)"
+                        strokeWidth="6"
+                        fill="transparent"
+                      />
+                      {/* Animated 75% Progress Circle */}
+                      <motion.circle
+                        cx="80"
+                        cy="80"
+                        r="68"
+                        stroke="#000"
+                        strokeWidth="6"
+                        strokeLinecap="round"
+                        fill="transparent"
+                        strokeDasharray={427.26}
+                        initial={{ strokeDashoffset: 427.26 }}
+                        whileInView={{ strokeDashoffset: 427.26 * (1 - 0.75) }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+                      />
+                    </svg>
+
+                    {/* Centered Broken Bone Icon */}
+                    <div className="absolute inset-0 flex items-center justify-center text-black">
+                      <BrokenBoneIcon className="w-10 h-10 md:w-14 md:h-14" />
+                    </div>
+                  </div>
+
+                  {/* Percentage Display & Label */}
+                  <div className="flex flex-col justify-center">
+                    <div className="text-4xl md:text-6xl font-bold tracking-tighter text-black leading-none">
+                      75%
+                    </div>
+                    <span className="font-mono text-[9px] md:text-xs tracking-[0.2em] uppercase text-black/50 mt-2">
+                      :PERMANENT INJURIES &amp; LIMB LOSS
+                    </span>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+
+            {/* Full-Width Image 8 (al vivo / bleed to page edges) with Overlay Titles */}
+            {(proj as any).problemSection.fullWidthImage && (
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                className="relative w-full mt-16 md:mt-24 -mx-6 md:-mx-12 overflow-hidden"
+                style={{ width: 'calc(100% + 3rem)' }}
+              >
+                <img 
+                  src={(proj as any).problemSection.fullWidthImage} 
+                  alt="Aegis Overview" 
+                  className="w-full h-auto object-cover block"
+                />
+
+                {/* Top Centered Text Overlay: Horizontal Lens Focus Words */}
+                <div 
+                  className="absolute top-[4%] md:top-[6%] left-1/2 w-full flex justify-center z-20 pointer-events-none"
+                  style={{ transform: 'translate(-50%, 80px)' }}
+                >
+                  <div className="pointer-events-auto">
+                    <HorizontalLensFocusWords words={["ASSISTIVE", "PLUG IN", "ARCHITECTURE"]} />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </section>
+        )}
+
+        {/* 3. Specialized Detail Section (Intro Image + Secondary Description) */}
         {(proj as any).introImage && (
           <section className="relative w-full bg-white pointer-events-auto z-10 overflow-hidden">
             {Array.isArray((proj as any).introImage) ? (
@@ -1451,6 +1977,37 @@ export default function ProjectDetail() {
                   </div>
                 </div>
              );
+          } else if (img.format === 'video-player') {
+             return (
+               <div key={idx} className="w-full px-6 md:px-12 flex flex-col gap-8 pt-8 pb-8">
+                 {(img as any).description && (
+                   <div className="w-full flex justify-end">
+                     <div className="md:w-2/3 max-w-3xl text-xl md:text-3xl font-medium tracking-tight leading-[1.3] text-black whitespace-pre-line">
+                       {(img as any).description}
+                     </div>
+                   </div>
+                 )}
+                 <div className="w-full">
+                   <InteractiveVideoPlayer 
+                     src={img.src} 
+                     title={(img as any).title || "Esposizione Loop"} 
+                   />
+                 </div>
+                 {(img as any).quote && (
+                   <motion.div 
+                     initial={{ opacity: 0, y: 30 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}
+                     transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                     className="w-full flex justify-center items-center pt-12 md:pt-20 pb-4 text-center"
+                   >
+                     <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter uppercase text-black leading-none">
+                       {(img as any).quote}
+                     </h3>
+                   </motion.div>
+                 )}
+               </div>
+             );
           } else if (img.format === 'compare') {
              return (
                <div key={idx} className="w-full px-6 md:px-12 flex flex-col gap-12 md:gap-16 pt-8">
@@ -1472,43 +2029,150 @@ export default function ProjectDetail() {
                </div>
              );
           } else if (img.format === 'two-col-images') {
+             const aspectClass = (img as any).aspect || "aspect-[4/3]";
              return (
-               <div key={idx} className="w-full px-6 md:px-12 py-12 md:py-20" style={{ paddingBottom: "calc(5rem + 40px)" }}>
-                 <div className="w-full flex">
+               <div key={idx} className="w-full px-6 md:px-12 py-12 md:py-20">
+                 <div className="w-full flex gap-6 md:gap-12 items-start">
+                   {/* Column A (Left) */}
                    <motion.div
                      initial={{ opacity: 0, y: 30 }}
                      whileInView={{ opacity: 1, y: 0 }}
                      viewport={{ once: true, margin: '0px 0px -10% 0px' }}
                      transition={{ duration: 0.7, ease: [0.215, 0.61, 0.355, 1] }}
-                     style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}
+                     className="w-1/2 flex flex-col items-center gap-6"
                    >
-                     <img src={img.src} alt="Visual" style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
-                     {(img as any).caption && (
-                       <div className="w-full mt-4">
-                         <p className="text-xl md:text-3xl font-medium tracking-tight leading-[1.3] text-black whitespace-pre-line">
-                           {(img as any).caption}
-                         </p>
+                     <div className={`relative w-full ${aspectClass} overflow-hidden rounded-sm bg-neutral-50`}>
+                       {img.src.endsWith('.mp4') ? (
+                         <video 
+                           src={img.src} 
+                           autoPlay 
+                           loop 
+                           muted 
+                           playsInline 
+                           className="w-full h-full object-cover object-center block"
+                         />
+                       ) : (
+                         <img src={img.src} alt="Visual Left" className="w-full h-full object-cover object-center block" />
+                       )}
+                     </div>
+                     {((img as any).title || (img as any).caption) && (
+                       <div className="w-full mt-2 flex flex-col gap-3">
+                         {(img as any).title && (
+                           <h3 className="text-2xl md:text-4xl font-bold tracking-tighter uppercase text-black leading-none">
+                             {(img as any).title}
+                           </h3>
+                         )}
+                         {(img as any).caption && (
+                           <p className="text-[1.05rem] md:text-xl lg:text-2xl font-medium tracking-tight leading-[1.35] text-black/80 whitespace-pre-line">
+                             {(img as any).caption}
+                           </p>
+                         )}
                        </div>
                      )}
                    </motion.div>
+
+                   {/* Column B (Right) */}
                    <motion.div
                      initial={{ opacity: 0, y: 30 }}
                      whileInView={{ opacity: 1, y: 0 }}
                      viewport={{ once: true, margin: '0px 0px -10% 0px' }}
                      transition={{ duration: 0.7, delay: 0.1, ease: [0.215, 0.61, 0.355, 1] }}
-                     style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}
+                     className="w-1/2 flex flex-col items-center gap-6"
                    >
-                     <img src={(img as any).overlaySrc} alt="Visual" style={{ width: '100%', height: 'auto', objectFit: 'contain' }} />
-                     {(img as any).captionRight && (
-                       <div className="w-full mt-4">
-                         <p className="text-xl md:text-3xl font-medium tracking-tight leading-[1.3] text-black">
-                           {(img as any).captionRight}
+                     <div className={`relative w-full ${aspectClass} overflow-hidden rounded-sm bg-neutral-50`}>
+                       {(img as any).overlaySrc?.endsWith('.mp4') ? (
+                         <video 
+                           src={(img as any).overlaySrc} 
+                           autoPlay 
+                           loop 
+                           muted 
+                           playsInline 
+                           className="w-full h-full object-cover object-bottom block"
+                           style={{ objectPosition: 'center bottom' }}
+                         />
+                       ) : (
+                         <img src={(img as any).overlaySrc} alt="Visual Right" className="w-full h-full object-cover object-bottom block" style={{ objectPosition: 'center bottom' }} />
+                       )}
+                     </div>
+                     {((img as any).titleRight || (img as any).captionRight) && (
+                        <div className="w-full mt-2 flex flex-col gap-3">
+                          {(img as any).titleRight && (
+                            <h3 className="text-2xl md:text-4xl font-bold tracking-tighter uppercase text-black leading-none">
+                              {(img as any).titleRight}
+                            </h3>
+                          )}
+                          {(img as any).captionRight && (
+                            <p className="text-[1.05rem] md:text-xl lg:text-2xl font-medium tracking-tight leading-[1.35] text-black/80 whitespace-pre-line">
+                              {(img as any).captionRight}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                   </motion.div>
+                 </div>
+               </div>
+             );
+          } else if (img.format === 'full-video-loop') {
+             return (
+               <FullVideoLoop key={idx} src={img.src} playbackRate={(img as any).playbackRate || 1.1} />
+             );
+          } else if (img.format === 'side-video-text') {
+             return (
+               <div key={idx} className="w-full px-6 md:px-12 py-16 md:py-24 border-t border-black/5">
+                 <div className="flex flex-col md:flex-row items-center gap-12 md:gap-24">
+                   {/* Left Column (1/2): Centered Video */}
+                   <motion.div 
+                     initial={{ opacity: 0, x: -50 }}
+                     whileInView={{ opacity: 1, x: 0 }}
+                     viewport={{ once: true, margin: "-10%" }}
+                     transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                     className="w-full md:w-1/2 flex items-center justify-center overflow-hidden rounded-sm bg-neutral-50"
+                   >
+                     <video 
+                       src={img.src} 
+                       autoPlay 
+                       loop 
+                       muted 
+                       playsInline 
+                       className="w-full h-auto max-h-[70vh] object-contain block rounded-sm shadow-sm"
+                     />
+                   </motion.div>
+
+                   {/* Right Column (1/2): Title & Text */}
+                   <motion.div 
+                     initial={{ opacity: 0, x: 50 }}
+                     whileInView={{ opacity: 1, x: 0 }}
+                     viewport={{ once: true, margin: "-10%" }}
+                     transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                     className="w-full md:w-1/2 flex flex-col justify-center gap-6"
+                   >
+                     {(img as any).title && (
+                       <h2 className="text-3xl md:text-5xl font-bold tracking-tighter uppercase text-black leading-none mb-2">
+                         {(img as any).title}
+                       </h2>
+                     )}
+                     {Array.isArray((img as any).text) ? (
+                       (img as any).text.map((paragraph: string, pIdx: number) => (
+                         <p key={pIdx} className="text-xl md:text-2xl lg:text-[1.65rem] font-medium tracking-tight leading-[1.35] text-black/80">
+                           {paragraph}
                          </p>
-                       </div>
+                       ))
+                     ) : (
+                       <p className="text-xl md:text-2xl lg:text-[1.65rem] font-medium tracking-tight leading-[1.35] text-black/80 whitespace-pre-line">
+                         {(img as any).text}
+                       </p>
                      )}
                    </motion.div>
                  </div>
                </div>
+             );
+          } else if (img.format === 'customization-carousel') {
+             return (
+               <InfiniteCarouselWithWatermark 
+                 key={idx} 
+                 images={(img as any).images || []} 
+                 watermark={(img as any).watermark || "CUSTOMIZATION"} 
+               />
              );
           } else if (img.format === 'interactive-slider') {
              return <InteractiveImageSlider key={idx} slides={(img as any).slides} interval={(img as any).interval} />;
@@ -1713,14 +2377,16 @@ export default function ProjectDetail() {
                </div>
              )
           } else if (img.format === 'setup-timeline') {
+             const title = (img as any).title || "SET UP";
+             const steps = (img as any).steps || [];
              return (
                <div key={idx} className="w-full px-6 md:px-12 py-20 md:py-32">
                  <div className="w-full flex items-end justify-between mb-16" style={{ paddingBottom: '25px' }}>
-                   <h2 className="font-bold tracking-tighter uppercase leading-none" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', marginTop: '-25px' }}>SET UP</h2>
-                   <span className="font-mono text-xs tracking-[0.3em] uppercase opacity-40 mb-1">4 steps</span>
+                   <h2 className="font-bold tracking-tighter uppercase leading-none" style={{ fontSize: 'clamp(2rem, 4vw, 3.5rem)', marginTop: '-25px' }}>{title}</h2>
+                   <span className="font-mono text-xs tracking-[0.3em] uppercase opacity-40 mb-1">{steps.length} steps</span>
                  </div>
-                  <div className="w-full h-px bg-black/10 mb-16" />
-                  <SetupTimeline steps={(img as any).steps || []} />
+                 <div className="w-full h-px bg-black/10 mb-16" />
+                 <SetupTimeline steps={steps} />
                </div>
              );
           } else if (img.format === 'asym-right') {
